@@ -67,9 +67,32 @@ const handleKeyPress = (event) => {
 
 const snakeEat = (snake, setSnake, foodCell) => {
     const headPos = snake[0].pos;
+    let foodSpawnDirection = -1;
+
+    switch (VALUES.direction) {
+        case 'LEFT':
+            foodSpawnDirection = 1;
+            break;
+        case 'RIGHT':
+            foodSpawnDirection = -1;
+            break;
+        case 'UP':
+            foodSpawnDirection = 10;
+            break;
+        case 'DOWN':
+            foodSpawnDirection = -10;
+            break;
+        default:
+            break;
+    }
 
     if (headPos === foodCell.pos) {
-        snake.push(new SnakeBody(snake[snake.length - 1].pos - 1, snake[snake.length - 1].pos));
+        snake.push(
+            new SnakeBody(
+                snake[snake.length - 1].pos + foodSpawnDirection,
+                snake[snake.length - 1].pos
+            )
+        );
 
         VALUES.foodCell = randomFood(snake); // передаю змію, щоб виключити спавн їжі на клітках змії
     }
@@ -171,7 +194,7 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
                                     : ''
                             }`}
                         >
-                            {/* {cell} */}
+                            {cell}
                         </div>
                     ))}
                 </div>

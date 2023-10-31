@@ -4,7 +4,7 @@ import { Board, GameOver, Menu, Overlay } from './components';
 import './App.css';
 
 function App() {
-    const [gameStatus, setGameStatus] = useState('menu'); // menu | game | pause | gameOver
+    const [gameStatus, setGameStatus] = useState('game'); // menu | game | pause | gameOver
 
     // useEffect(() => {
     //     console.log(gameStatus);
