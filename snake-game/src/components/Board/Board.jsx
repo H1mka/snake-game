@@ -3,6 +3,9 @@ import { gameSettings } from '../../constants/gameSettings';
 import { randomFood } from '../../utils/randomFood';
 import { useDispatch } from 'react-redux';
 import { incrementScoreByAmount } from '../../redux/snakeSlice';
+import { SnakeHead, SnakeBody } from '../Classes/SnakeClasses';
+import { createBoard } from '../../utils/createBoard';
+import { FoodCellsMap } from '../../constants/foodcellsMap';
 import PropTypes from 'prop-types';
 
 import './BoardStyles.scss';
@@ -10,35 +13,8 @@ import './BoardStyles.scss';
 /* GLOBAL VALUES */
 const VALUES = {
     direction: 'LEFT',
-    foodCell: { type: 'smFood', pos: 17, cost: 1 },
+    foodCell: { foodType: 'smFood', pos: 17, cost: 1 },
 };
-
-const createBoard = (boardSize = 10) => {
-    let counter = 1;
-
-    const boardRes = [];
-    for (let i = 0; i < boardSize; i++) {
-        boardRes[i] = new Array(boardSize);
-        for (let j = 0; j < boardSize; j++) {
-            boardRes[i][j] = counter;
-            counter++;
-        }
-    }
-    return boardRes;
-};
-
-class SnakeHead {
-    constructor(pos) {
-        this.pos = pos;
-    }
-}
-
-class SnakeBody {
-    constructor(pos, next) {
-        this.pos = pos;
-        this.next = next;
-    }
-}
 
 const handleKeyPress = (event) => {
     switch (event.key) {
@@ -69,24 +45,15 @@ const handleKeyPress = (event) => {
 
 const snakeEat = (snake, setSnake, foodCell, dispatch) => {
     const headPos = snake[0].pos;
-    let bodySpawnDirection = -1;
 
-    switch (VALUES.direction) {
-        case 'LEFT':
-            bodySpawnDirection = 1;
-            break;
-        case 'RIGHT':
-            bodySpawnDirection = -1;
-            break;
-        case 'UP':
-            bodySpawnDirection = 10;
-            break;
-        case 'DOWN':
-            bodySpawnDirection = -10;
-            break;
-        default:
-            break;
-    }
+    const spawnDirectionMap = {
+        LEFT: 1,
+        Right: -1,
+        UP: 10,
+        DOWN: -10,
+    };
+
+    const bodySpawnDirection = spawnDirectionMap[VALUES.direction] || -1;
 
     if (headPos === foodCell.pos) {
         snake.push(
@@ -113,43 +80,42 @@ const snakeCollusion = (snake = Array.prototype, setGameStatusEnd) => {
 const moveHeadAndBody = (snake, head, moveRange) => {
     head.pos += moveRange;
     for (let i = 1; i < snake.length; i++) {
+        // для першої частини тіла, вказівник next береться з head
         if (i === 1) {
             snake[1].pos = snake[1].next;
             snake[1].next = snake[0].pos;
             continue;
         }
+
+        // для інших частин тіла, вказівник next береться з попередньої частини
         snake[i].pos = snake[i].next;
         snake[i].next = snake[i - 1].pos;
     }
-    return snake;
 };
 
 const move = (snake, setSnake, direction) => {
     const head = snake[0];
     const sqBoardSize = gameSettings.boardSize ** 2; // square board size
-    switch (direction) {
-        case 'LEFT':
-            if (head.pos < 1) moveHeadAndBody(snake, head, sqBoardSize);
-            else moveHeadAndBody(snake, head, -1);
-            break;
 
-        case 'RIGHT':
-            if (head.pos > sqBoardSize) moveHeadAndBody(snake, head, -sqBoardSize);
-            else moveHeadAndBody(snake, head, 1);
-            break;
+    const moveOffsets = {
+        LEFT: -1,
+        RIGHT: 1,
+        DOWN: 10,
+        UP: -10,
+    };
 
-        case 'DOWN':
-            if (head.pos > sqBoardSize) moveHeadAndBody(snake, head, -sqBoardSize);
-            else moveHeadAndBody(snake, head, 10);
-            break;
+    const moveDirection = moveOffsets[direction];
 
-        case 'UP':
-            if (head.pos < 0) moveHeadAndBody(snake, head, sqBoardSize);
-            else moveHeadAndBody(snake, head, -10);
-            break;
-        default:
-            break;
+    if (moveDirection) {
+        const newPos = head.pos + moveDirection;
+
+        if (newPos < 0 || newPos > sqBoardSize) {
+            moveHeadAndBody(snake, head, moveDirection < 0 ? sqBoardSize : -sqBoardSize);
+        } else {
+            moveHeadAndBody(snake, head, moveDirection);
+        }
     }
+
     setSnake([...snake]);
 };
 
@@ -157,6 +123,7 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
     const { boardSize } = gameSettings;
     const [board, setBoard] = useState(createBoard(boardSize));
     const [snake, setSnake] = useState([new SnakeHead(58)]);
+
     const gameStatusRef = useRef(gameStatus);
     const dispatch = useDispatch();
 
@@ -192,11 +159,7 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
                                 snake.some((part) => part.pos === cell)
                                     ? 'snake-cell'
                                     : cell === VALUES.foodCell.pos
-                                    ? VALUES.foodCell.foodType === 'lgFood'
-                                        ? 'large-food'
-                                        : VALUES.foodCell.foodType === 'mdFood'
-                                        ? 'medium-food'
-                                        : 'small-food'
+                                    ? FoodCellsMap[VALUES.foodCell.foodType]
                                     : ''
                             }`}
                         >

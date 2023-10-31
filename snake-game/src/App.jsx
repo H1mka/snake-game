@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Board, GameOver, Menu, Overlay } from './components';
 import { useSelector } from 'react-redux';
 import { selectSnakeScore } from './redux/snakeSlice';
@@ -6,13 +6,10 @@ import { selectSnakeScore } from './redux/snakeSlice';
 import './App.css';
 
 function App() {
-    const [gameStatus, setGameStatus] = useState('game'); // menu | game | pause | gameOver
+    const [gameStatus, setGameStatus] = useState('menu'); // menu | game | pause | gameOver
 
     const snakeScore = useSelector(selectSnakeScore);
     console.log(snakeScore);
-    // useEffect(() => {
-    //     console.log(gameStatus);
-    // }, [gameStatus]);
 
     const setGameStatusGame = () => {
         setGameStatus('game');
@@ -24,7 +21,6 @@ function App() {
 
     const setGameStatusEnd = () => {
         setGameStatus('gameOver');
-        // console.log('app', gameStatus);
     };
 
     return (
@@ -34,7 +30,7 @@ function App() {
                 setGameStatusEnd={setGameStatusEnd}
                 setGameStatusPause={setGameStatusPause}
             />
-            {/* {gameStatus === 'menu' ? (
+            {gameStatus === 'menu' ? (
                 <Overlay>
                     <Menu setGameStatusGame={setGameStatusGame} />
                 </Overlay>
@@ -44,7 +40,7 @@ function App() {
                 </Overlay>
             ) : (
                 ''
-            )} */}
+            )}
         </>
     );
 }
