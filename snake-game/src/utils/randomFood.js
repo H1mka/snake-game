@@ -1,15 +1,15 @@
 import { gameSettings } from '../constants/gameSettings';
 
 const getTypeForFood = () => {
-    let foodType = 'smFood';
+    let foodType = { foodType: 'smFood', cost: 1 };
 
     const typeNum = Math.floor(Math.random() * 3) + 1;
     switch (typeNum) {
         case 2:
-            foodType = 'mdFood';
+            foodType = { foodType: 'mdFood', cost: 5 };
             break;
         case 3:
-            foodType = 'lgFood';
+            foodType = { foodType: 'lgFood', cost: 10 };
             break;
         default:
             break;
@@ -27,10 +27,7 @@ const randomFood = (snake) => {
 
     let foodType = getTypeForFood();
 
-    return {
-        foodType,
-        pos: foodPos,
-    };
+    return { ...foodType, pos: foodPos };
 };
 
 export { randomFood };

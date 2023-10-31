@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { gameSettings } from '../../constants/gameSettings';
 import { randomFood } from '../../utils/randomFood';
+import { useDispatch } from 'react-redux';
+import { incrementScoreByAmount } from '../../redux/snakeSlice';
 import PropTypes from 'prop-types';
 
 import './BoardStyles.scss';
@@ -8,7 +10,7 @@ import './BoardStyles.scss';
 /* GLOBAL VALUES */
 const VALUES = {
     direction: 'LEFT',
-    foodCell: { type: 'small', pos: 17 },
+    foodCell: { type: 'smFood', pos: 17, cost: 1 },
 };
 
 const createBoard = (boardSize = 10) => {
@@ -65,22 +67,22 @@ const handleKeyPress = (event) => {
     }
 };
 
-const snakeEat = (snake, setSnake, foodCell) => {
+const snakeEat = (snake, setSnake, foodCell, dispatch) => {
     const headPos = snake[0].pos;
-    let foodSpawnDirection = -1;
+    let bodySpawnDirection = -1;
 
     switch (VALUES.direction) {
         case 'LEFT':
-            foodSpawnDirection = 1;
+            bodySpawnDirection = 1;
             break;
         case 'RIGHT':
-            foodSpawnDirection = -1;
+            bodySpawnDirection = -1;
             break;
         case 'UP':
-            foodSpawnDirection = 10;
+            bodySpawnDirection = 10;
             break;
         case 'DOWN':
-            foodSpawnDirection = -10;
+            bodySpawnDirection = -10;
             break;
         default:
             break;
@@ -89,11 +91,11 @@ const snakeEat = (snake, setSnake, foodCell) => {
     if (headPos === foodCell.pos) {
         snake.push(
             new SnakeBody(
-                snake[snake.length - 1].pos + foodSpawnDirection,
+                snake[snake.length - 1].pos + bodySpawnDirection,
                 snake[snake.length - 1].pos
             )
         );
-
+        dispatch(incrementScoreByAmount(VALUES.foodCell.cost));
         VALUES.foodCell = randomFood(snake); // передаю змію, щоб виключити спавн їжі на клітках змії
     }
     setSnake([...snake]);
@@ -125,7 +127,6 @@ const moveHeadAndBody = (snake, head, moveRange) => {
 const move = (snake, setSnake, direction) => {
     const head = snake[0];
     const sqBoardSize = gameSettings.boardSize ** 2; // square board size
-    console.log(head.pos);
     switch (direction) {
         case 'LEFT':
             if (head.pos < 1) moveHeadAndBody(snake, head, sqBoardSize);
@@ -157,6 +158,7 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
     const [board, setBoard] = useState(createBoard(boardSize));
     const [snake, setSnake] = useState([new SnakeHead(58)]);
     const gameStatusRef = useRef(gameStatus);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         gameStatusRef.current = gameStatus;
@@ -167,7 +169,7 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
             if (gameStatusRef.current !== 'game') return;
 
             move(snake, setSnake, VALUES.direction);
-            snakeEat(snake, setSnake, VALUES.foodCell);
+            snakeEat(snake, setSnake, VALUES.foodCell, dispatch);
             snakeCollusion(snake, setGameStatusEnd);
         }, 400);
 
@@ -190,11 +192,15 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
                                 snake.some((part) => part.pos === cell)
                                     ? 'snake-cell'
                                     : cell === VALUES.foodCell.pos
-                                    ? 'food-cell'
+                                    ? VALUES.foodCell.foodType === 'lgFood'
+                                        ? 'large-food'
+                                        : VALUES.foodCell.foodType === 'mdFood'
+                                        ? 'medium-food'
+                                        : 'small-food'
                                     : ''
                             }`}
                         >
-                            {cell}
+                            {/* {cell} */}
                         </div>
                     ))}
                 </div>
