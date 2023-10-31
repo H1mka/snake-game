@@ -1,0 +1,44 @@
+.menuWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+
+    .menu {
+        display: flex;
+        flex-direction: column;
+
+        label {
+            color: white;
+            font-size: 32px;
+        }
+
+        input {
+            margin-bottom: 40px;
+            font-size: 24px;
+            padding: 6px 12px;
+            outline: none;
+        }
+
+        button {
+            max-width: 200px;
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 24px;
+            align-self: center;
+
+            border: none;
+            cursor: pointer;
+            background-color: #3261cd;
+
+            &:hover {
+                background-color: #4e7cf6;
+            }
+        }
+    }
+}

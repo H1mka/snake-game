@@ -1,0 +1,16 @@
+.gameOverWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
