@@ -101,21 +101,27 @@ const moveHeadAndBody = (snake, head, moveRange) => {
 
 const move = (snake, setSnake, direction) => {
     const head = snake[0];
+    const sqBoardSize = gameSettings.boardSize ** 2; // square board size
+    console.log(head.pos);
     switch (direction) {
         case 'LEFT':
-            moveHeadAndBody(snake, head, -1);
+            if (head.pos < 1) moveHeadAndBody(snake, head, sqBoardSize);
+            else moveHeadAndBody(snake, head, -1);
             break;
 
         case 'RIGHT':
-            moveHeadAndBody(snake, head, 1);
+            if (head.pos > sqBoardSize) moveHeadAndBody(snake, head, -sqBoardSize);
+            else moveHeadAndBody(snake, head, 1);
             break;
 
         case 'DOWN':
-            moveHeadAndBody(snake, head, 10);
+            if (head.pos > sqBoardSize) moveHeadAndBody(snake, head, -sqBoardSize);
+            else moveHeadAndBody(snake, head, 10);
             break;
 
         case 'UP':
-            moveHeadAndBody(snake, head, -10);
+            if (head.pos < 0) moveHeadAndBody(snake, head, sqBoardSize);
+            else moveHeadAndBody(snake, head, -10);
             break;
         default:
             break;
@@ -125,7 +131,6 @@ const move = (snake, setSnake, direction) => {
 
 const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
     const { boardSize } = gameSettings;
-    console.log('status', gameStatus);
     const [board, setBoard] = useState(createBoard(boardSize));
     const [snake, setSnake] = useState([new SnakeHead(58)]);
     const gameStatusRef = useRef(gameStatus);
@@ -141,7 +146,7 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
             move(snake, setSnake, VALUES.direction);
             snakeEat(snake, setSnake, VALUES.foodCell);
             snakeCollusion(snake, setGameStatusEnd);
-        }, 200);
+        }, 400);
 
         document.addEventListener('keydown', handleKeyPress);
 

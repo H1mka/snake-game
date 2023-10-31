@@ -6,9 +6,9 @@ import './App.css';
 function App() {
     const [gameStatus, setGameStatus] = useState('menu'); // menu | game | pause | gameOver
 
-    useEffect(() => {
-        console.log(gameStatus);
-    }, [gameStatus]);
+    // useEffect(() => {
+    //     console.log(gameStatus);
+    // }, [gameStatus]);
 
     const setGameStatusGame = () => {
         setGameStatus('game');
@@ -20,7 +20,7 @@ function App() {
 
     const setGameStatusEnd = () => {
         setGameStatus('gameOver');
-        console.log('app', gameStatus);
+        // console.log('app', gameStatus);
     };
 
     return (
@@ -30,7 +30,7 @@ function App() {
                 setGameStatusEnd={setGameStatusEnd}
                 setGameStatusPause={setGameStatusPause}
             />
-            {gameStatus === 'menu' ? (
+            {/* {gameStatus === 'menu' ? (
                 <Overlay>
                     <Menu setGameStatusGame={setGameStatusGame} />
                 </Overlay>
@@ -40,7 +40,7 @@ function App() {
                 </Overlay>
             ) : (
                 ''
-            )}
+            )} */}
         </>
     );
 }
