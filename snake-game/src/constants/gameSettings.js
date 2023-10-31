@@ -1,3 +1,5 @@
-const GameSettings = {};
+const gameSettings = {
+    boardSize: 10,
+};
 
-export { GameSettings };
+export { gameSettings };
