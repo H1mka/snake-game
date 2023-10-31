@@ -1,0 +1,3 @@
+const GameSettings = {};
+
+export { GameSettings };
