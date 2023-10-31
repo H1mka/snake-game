@@ -29,7 +29,27 @@
         background-color: #0a4f57 !important;
     }
 
-    &.food-cell {
-        background-color: #eb4d4b !important;
+    &.small-food {
+        // background-color: #eb4d4b !important;
+        background-image: url(../../assets/images/apple2.png);
+        background-size: 90% 90%;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &.medium-food {
+        // background-color: #22a6b3 !important;
+        background-image: url(../../assets/images/pineapple2.png);
+        background-size: 90% 90%;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &.large-food {
+        // background-color: #130f40 !important;
+        background-image: url(../../assets/images/watermelon.png);
+        background-size: 90% 90%;
+        background-position: center;
+        background-repeat: no-repeat;
     }
 }
