@@ -13,4 +13,21 @@
         flex-direction: column;
         gap: 10px;
     }
+
+    button {
+        max-width: 200px;
+        width: 100%;
+        padding: 10px 16px;
+        border-radius: 6px;
+        font-size: 24px;
+        align-self: center;
+
+        border: none;
+        cursor: pointer;
+        background-color: #3261cd;
+
+        &:hover {
+            background-color: #4e7cf6;
+        }
+    }
 }
