@@ -4,10 +4,9 @@ gameSetting файл з налаштуваннями гри, швидкість 
 database snake_database
 Table leader_board
 
-id SERIAL Primary Key
-player_name VARCHAR(255)
-player_score Integer
-
+id SERIAL Primary Key |
+player_name VARCHAR(255) |
+player_score Integer |
 */
 
 Екран початку гри
