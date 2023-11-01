@@ -17,28 +17,40 @@ const VALUES = {
     scoreToIncrease: 0,
 };
 
-const handleKeyPress = (event) => {
-    switch (event.key) {
+const handleKeyPress = (event, gameStatus, setGameStatusGame, setGameStatusPause) => {
+    console.log(event.code);
+    if (event.code === 'Space') {
+        if (gameStatus === 'game') setGameStatusPause();
+        else if (gameStatus === 'pause') setGameStatusGame();
+    }
+
+    if (gameStatus === 'pause') return;
+
+    switch (event.code) {
         case 'ArrowUp':
             if (VALUES.direction === 'DOWN') break;
 
             VALUES.direction = 'UP';
             break;
+
         case 'ArrowDown':
             if (VALUES.direction === 'UP') break;
 
             VALUES.direction = 'DOWN';
             break;
+
         case 'ArrowLeft':
             if (VALUES.direction === 'RIGHT') break;
 
             VALUES.direction = 'LEFT';
             break;
+
         case 'ArrowRight':
             if (VALUES.direction === 'LEFT') break;
 
             VALUES.direction = 'RIGHT';
             break;
+
         default:
             break;
     }
@@ -133,7 +145,7 @@ const increaseGameSpeed = (gameTick, setGameTick) => {
     }
 };
 
-const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
+const Board = ({ gameStatus, setGameStatusEnd, setGameStatusGame, setGameStatusPause }) => {
     const { boardSize } = gameSettings;
     const [board, setBoard] = useState(createBoard(boardSize));
     const [snake, setSnake] = useState([new SnakeHead(58)]);
@@ -163,10 +175,13 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
     }, [gameTick]);
 
     useEffect(() => {
-        document.addEventListener('keydown', handleKeyPress);
+        const keyDownHandler = (event) =>
+            handleKeyPress(event, gameStatusRef.current, setGameStatusGame, setGameStatusPause);
+
+        document.addEventListener('keydown', keyDownHandler);
 
         return () => {
-            document.removeEventListener('keydown', handleKeyPress);
+            document.removeEventListener('keydown', keyDownHandler);
         };
     }, []);
 
@@ -198,6 +213,7 @@ Board.propTypes = {
     gameStatus: PropTypes.string.isRequired,
     setGameStatusEnd: PropTypes.func.isRequired,
     setGameStatusPause: PropTypes.func.isRequired,
+    setGameStatusGame: PropTypes.func.isRequired,
 };
 
 export default Board;

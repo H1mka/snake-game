@@ -5,8 +5,7 @@ import './Overlay.scss';
 const Overlay = ({ children }) => {
     return (
         <>
-            <div className='overlay'></div>
-            {children}
+            <div className='overlay'>{children}</div>
         </>
     );
 };
