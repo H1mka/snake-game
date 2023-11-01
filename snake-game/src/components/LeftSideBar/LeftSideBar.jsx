@@ -24,6 +24,11 @@ const LeftSideBar = () => {
                     <p> – 10 points</p>
                 </div>
             </div>
+            <div className='controlInfo'>
+                <p>
+                    <span className='space'>Space</span> – pause
+                </p>
+            </div>
         </div>
     );
 };

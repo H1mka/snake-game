@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import { Board, GameOver, Menu, Overlay, LeftSideBar } from './components';
-import { useSelector } from 'react-redux';
-import { selectSnakeScore } from './redux/snakeSlice';
 
 import './App.css';
 
 function App() {
     const [gameStatus, setGameStatus] = useState('menu'); // menu | game | pause | gameOver
-
-    const snakeScore = useSelector(selectSnakeScore);
-    console.log(snakeScore);
 
     const setGameStatusGame = () => {
         setGameStatus('game');
@@ -29,6 +24,7 @@ function App() {
             <Board
                 gameStatus={gameStatus}
                 setGameStatusEnd={setGameStatusEnd}
+                setGameStatusGame={setGameStatusGame}
                 setGameStatusPause={setGameStatusPause}
             />
             {gameStatus === 'menu' ? (
@@ -38,6 +34,10 @@ function App() {
             ) : gameStatus === 'gameOver' ? (
                 <Overlay>
                     <GameOver setGameStatusGame={setGameStatusGame} />
+                </Overlay>
+            ) : gameStatus === 'pause' ? (
+                <Overlay>
+                    <img src='src/assets/images/pauseImg.png' />
                 </Overlay>
             ) : (
                 ''
