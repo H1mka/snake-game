@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Board, GameOver, Menu, Overlay } from './components';
+import { Board, GameOver, Menu, Overlay, LeftSideBar } from './components';
 import { useSelector } from 'react-redux';
 import { selectSnakeScore } from './redux/snakeSlice';
 
@@ -25,6 +25,7 @@ function App() {
 
     return (
         <>
+            <LeftSideBar />
             <Board
                 gameStatus={gameStatus}
                 setGameStatusEnd={setGameStatusEnd}
@@ -41,6 +42,7 @@ function App() {
             ) : (
                 ''
             )}
+            <LeftSideBar />
         </>
     );
 }

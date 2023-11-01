@@ -3,5 +3,6 @@ import Board from './Board/Board';
 import Score from './Score/Score';
 import Overlay from './Overlay/Overlay';
 import GameOver from './GameOver/GameOver';
+import LeftSideBar from './LeftSideBar/LeftSideBar';
 
-export { Menu, Board, Score, Overlay, GameOver };
+export { Menu, Board, Score, Overlay, GameOver, LeftSideBar };

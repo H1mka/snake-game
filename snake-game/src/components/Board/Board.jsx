@@ -14,6 +14,7 @@ import './BoardStyles.scss';
 const VALUES = {
     direction: 'LEFT',
     foodCell: { foodType: 'smFood', pos: 17, cost: 1 },
+    scoreToIncrease: 0,
 };
 
 const handleKeyPress = (event) => {
@@ -49,8 +50,8 @@ const snakeEat = (snake, setSnake, foodCell, dispatch) => {
     const spawnDirectionMap = {
         LEFT: 1,
         Right: -1,
-        UP: 10,
-        DOWN: -10,
+        UP: gameSettings.boardSize,
+        DOWN: -gameSettings.boardSize,
     };
 
     const bodySpawnDirection = spawnDirectionMap[VALUES.direction] || -1;
@@ -62,6 +63,8 @@ const snakeEat = (snake, setSnake, foodCell, dispatch) => {
                 snake[snake.length - 1].pos
             )
         );
+        // dispatch(increaseGameTick());
+        VALUES.scoreToIncrease += VALUES.foodCell.cost;
         dispatch(incrementScoreByAmount(VALUES.foodCell.cost));
         VALUES.foodCell = randomFood(snake); // передаю змію, щоб виключити спавн їжі на клітках змії
     }
@@ -100,8 +103,8 @@ const move = (snake, setSnake, direction) => {
     const moveOffsets = {
         LEFT: -1,
         RIGHT: 1,
-        DOWN: 10,
-        UP: -10,
+        DOWN: gameSettings.boardSize,
+        UP: -gameSettings.boardSize,
     };
 
     const moveDirection = moveOffsets[direction];
@@ -119,10 +122,22 @@ const move = (snake, setSnake, direction) => {
     setSnake([...snake]);
 };
 
+const increaseGameSpeed = (gameTick, setGameTick) => {
+    // Щоб gameTick не був нижче 100, нижче 100 не іграбельно
+    if (gameTick - gameSettings.increaseValue < 100) return;
+
+    if (VALUES.scoreToIncrease >= gameSettings.increaseEvery) {
+        setGameTick((prev) => prev - gameSettings.increaseValue);
+        VALUES.scoreToIncrease = 0;
+        console.log('inc');
+    }
+};
+
 const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
     const { boardSize } = gameSettings;
     const [board, setBoard] = useState(createBoard(boardSize));
     const [snake, setSnake] = useState([new SnakeHead(58)]);
+    const [gameTick, setGameTick] = useState(gameSettings.gameTick);
 
     const gameStatusRef = useRef(gameStatus);
     const dispatch = useDispatch();
@@ -138,12 +153,19 @@ const Board = ({ gameStatus, setGameStatusEnd, setGameStatusPause }) => {
             move(snake, setSnake, VALUES.direction);
             snakeEat(snake, setSnake, VALUES.foodCell, dispatch);
             snakeCollusion(snake, setGameStatusEnd);
-        }, 400);
 
-        document.addEventListener('keydown', handleKeyPress);
+            increaseGameSpeed(gameTick, setGameTick);
+        }, gameTick);
 
         return () => {
             clearInterval(intervalId);
+        };
+    }, [gameTick]);
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyPress);
+
+        return () => {
             document.removeEventListener('keydown', handleKeyPress);
         };
     }, []);
