@@ -18,7 +18,6 @@ const VALUES = {
 };
 
 const handleKeyPress = (event, gameStatus, setGameStatusGame, setGameStatusPause) => {
-    console.log(event.code);
     if (event.code === 'Space') {
         if (gameStatus === 'game') setGameStatusPause();
         else if (gameStatus === 'pause') setGameStatusGame();
@@ -124,8 +123,10 @@ const move = (snake, setSnake, direction) => {
     if (moveDirection) {
         const newPos = head.pos + moveDirection;
 
-        if (newPos < 0 || newPos > sqBoardSize) {
-            moveHeadAndBody(snake, head, moveDirection < 0 ? sqBoardSize : -sqBoardSize);
+        if (head.pos === 0 || newPos === sqBoardSize + 1)
+            moveHeadAndBody(snake, head, head.pos === 0 ? sqBoardSize : -sqBoardSize + 1);
+        else if (newPos < 0 || newPos > sqBoardSize) {
+            moveHeadAndBody(snake, head, moveDirection < 0 ? sqBoardSize - 10 : -sqBoardSize + 10);
         } else {
             moveHeadAndBody(snake, head, moveDirection);
         }
@@ -141,7 +142,6 @@ const increaseGameSpeed = (gameTick, setGameTick) => {
     if (VALUES.scoreToIncrease >= gameSettings.increaseEvery) {
         setGameTick((prev) => prev - gameSettings.increaseValue);
         VALUES.scoreToIncrease = 0;
-        console.log('inc');
     }
 };
 
