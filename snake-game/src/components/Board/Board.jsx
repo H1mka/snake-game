@@ -126,7 +126,13 @@ const move = (snake, setSnake, direction) => {
         if (head.pos === 0 || newPos === sqBoardSize + 1)
             moveHeadAndBody(snake, head, head.pos === 0 ? sqBoardSize : -sqBoardSize + 1);
         else if (newPos < 0 || newPos > sqBoardSize) {
-            moveHeadAndBody(snake, head, moveDirection < 0 ? sqBoardSize - 10 : -sqBoardSize + 10);
+            moveHeadAndBody(
+                snake,
+                head,
+                moveDirection < 0
+                    ? sqBoardSize - gameSettings.boardSize
+                    : -sqBoardSize + gameSettings.boardSize
+            );
         } else {
             moveHeadAndBody(snake, head, moveDirection);
         }
