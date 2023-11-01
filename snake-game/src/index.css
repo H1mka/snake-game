@@ -6,4 +6,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: system-ui, Roboto, sans-serif;
+}
+
+#root {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
