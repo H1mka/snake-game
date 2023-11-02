@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LeaderBoardApi } from '../../utils/LeaderBoardApi';
+import { LeaderBoardApi } from '../../utils';
 
 import './LeaderBoard.scss';
 

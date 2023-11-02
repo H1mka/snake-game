@@ -2,7 +2,7 @@ import PropType from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSnakeScore, selectPlayerName } from '../../redux/snakeSlice';
 import { resetScore } from '../../redux/snakeSlice';
-import { LeaderBoardApi } from '../../utils/LeaderBoardApi';
+import { LeaderBoardApi } from '../../utils';
 
 import './GameOver.scss';
 
