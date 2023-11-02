@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { gameSettings } from '../../constants/gameSettings';
-import { randomFood } from '../../utils/randomFood';
+
 import { useDispatch } from 'react-redux';
 import { incrementScoreByAmount } from '../../redux/snakeSlice';
-import { SnakeHead, SnakeBody } from '../Classes/SnakeClasses';
-import { createBoard } from '../../utils/createBoard';
+
+import { SnakeHead, SnakeBody } from '../../сlasses/SnakeClasses';
 import { FoodCellsMap } from '../../constants/foodcellsMap';
+
+import { randomFood, createBoard, getFirstNumber } from '../../utils';
+
 import PropTypes from 'prop-types';
 
 import './BoardStyles.scss';
@@ -109,13 +112,14 @@ const moveHeadAndBody = (snake, head, moveRange) => {
 
 const move = (snake, setSnake, direction) => {
     const head = snake[0];
-    const sqBoardSize = gameSettings.boardSize ** 2; // square board size
+    const { boardSize } = gameSettings;
 
+    const sqBoardSize = boardSize ** 2; // square board size
     const moveOffsets = {
         LEFT: -1,
         RIGHT: 1,
-        DOWN: gameSettings.boardSize,
-        UP: -gameSettings.boardSize,
+        DOWN: boardSize,
+        UP: -boardSize,
     };
 
     const moveDirection = moveOffsets[direction];
@@ -123,9 +127,22 @@ const move = (snake, setSnake, direction) => {
     if (moveDirection) {
         const newPos = head.pos + moveDirection;
 
-        if (head.pos === 0 || newPos === sqBoardSize + 1)
-            moveHeadAndBody(snake, head, head.pos === 0 ? sqBoardSize : -sqBoardSize + 1);
-        else if (newPos < 0 || newPos > sqBoardSize) {
+        /* ... HORIZONTAL SIDES MOVEMENT ... */
+        // right vertical side
+        if (head.pos === getFirstNumber(head.pos) * boardSize && newPos === head.pos + 1) {
+            moveHeadAndBody(snake, head, -boardSize + 1);
+            return;
+        }
+
+        // left vertical side
+        if (head.pos === getFirstNumber(head.pos) * boardSize + 1 && newPos === head.pos - 1) {
+            moveHeadAndBody(snake, head, boardSize - 1);
+            return;
+        }
+        /* ... */
+
+        /* VERTICAL SIDES MOVEMENT */
+        if (newPos < 0 || newPos > sqBoardSize) {
             moveHeadAndBody(
                 snake,
                 head,
@@ -134,6 +151,7 @@ const move = (snake, setSnake, direction) => {
                     : -sqBoardSize + gameSettings.boardSize
             );
         } else {
+            // DEFAULT MOVEMENT
             moveHeadAndBody(snake, head, moveDirection);
         }
     }
@@ -153,9 +171,10 @@ const increaseGameSpeed = (gameTick, setGameTick) => {
 
 const Board = ({ gameStatus, setGameStatusEnd, setGameStatusGame, setGameStatusPause }) => {
     const { boardSize } = gameSettings;
-    const [board, setBoard] = useState(createBoard(boardSize));
     const [snake, setSnake] = useState([new SnakeHead(58)]);
     const [gameTick, setGameTick] = useState(gameSettings.gameTick);
+
+    const board = createBoard(boardSize);
 
     const gameStatusRef = useRef(gameStatus);
     const dispatch = useDispatch();
