@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Pool = require('pg').Pool;
 
 // Треба змінити данні
@@ -13,11 +14,11 @@ player_score Integer
 */
 
 const db = new Pool({
-    user: 'postgres',
-    password: '1234567q',
-    host: 'localhost',
-    port: 5432,
-    database: 'snake_database',
+    user: process.env.USER,
+    password: process.env.DATABASE_PASSWORD,
+    host: process.env.HOST,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
 });
 
 module.exports = db;
