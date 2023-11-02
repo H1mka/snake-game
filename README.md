@@ -2,17 +2,7 @@
 Розмір ігрового поля 10х10, краще не міняти
 
 ## Налаштування
-gameSetting файл з налаштуваннями гри, швидкість змїї це gameTick.
-
-## PostgreSql
-                     
-database snake_database                                                     
-Table leader_board
-
-id SERIAL Primary Key             
-player_name VARCHAR(255)                     
-player_score Integer                       
-
+gameSetting файл з налаштуваннями гри, швидкість змїї це gameTick.            
 
 ## Екран початку гри
 ![image](https://github.com/H1mka/snake-game/assets/60039557/6b20ab72-6213-4c4b-a910-76ad4574a537)
