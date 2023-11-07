@@ -2,10 +2,10 @@ import axios from 'axios';
 
 export const LeaderBoardApi = {
     getLeaders() {
-        return axios.get('http://localhost:8080/api/leaderBoard');
+        return axios.get('https://snake-server-production-8232.up.railway.app/api/leaderboard');
     },
 
     postLeaders(body) {
-        axios.post('http://localhost:8080/api/leaderBoard', body);
+        axios.post('https://snake-server-production-8232.up.railway.app/api/leaderboard', body);
     },
 };
